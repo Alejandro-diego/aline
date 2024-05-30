@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "482712110857",
+    "project_id": "alines-17c1d",
+    "storage_bucket": "alines-17c1d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:482712110857:android:88ad56ab148b41a993b5d8",
+        "android_client_info": {
+          "package_name": "br.dev.iotech.alines"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPaSLKG7EyNLI-qH06IL6f--CUyH29rJ4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
