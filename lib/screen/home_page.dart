@@ -92,6 +92,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       ...data.listFuntions.map(
                         (listFuntion) => NeuButton(
+                          isRGBOn: listFuntion.isRGBOn,
                           isDimmerOn: listFuntion.isDimmerIsOn,
                           onChanged: !listFuntion.status
                               ? null
@@ -128,6 +129,7 @@ class _HomePageState extends State<HomePage> {
                               fontFamily: CupertinoIcons.iconFont,
                               fontPackage: CupertinoIcons.iconFontPackage),
                           dimmerValue: listFuntion.dimmerValue.toDouble(),
+                          isCCTOn: listFuntion.isCCTOn,
                         ),
                       ),
                     ],
@@ -135,7 +137,6 @@ class _HomePageState extends State<HomePage> {
                 );
               },
             )
-            
           ],
         ),
       ),

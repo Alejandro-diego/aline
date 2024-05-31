@@ -10,6 +10,8 @@ class NeuButton extends StatefulWidget {
       this.isEnable = false,
       this.eventStatus = false,
       this.onChanged,
+      required this.isCCTOn,
+      required this.isRGBOn,
       required this.isDimmerOn,
       required this.dimmerValue,
       required this.isButtonPressed,
@@ -26,6 +28,8 @@ class NeuButton extends StatefulWidget {
   bool isButtonPressed;
   double dimmerValue;
   bool isDimmerOn;
+  bool isRGBOn;
+  bool isCCTOn;
 
   @override
   State<NeuButton> createState() => _NeuButtonState();
@@ -114,7 +118,9 @@ class _NeuButtonState extends State<NeuButton> {
                 child: Icon(
                   Icons.access_time,
                   size: 17,
-                  color: widget.eventStatus ? Colors.red : Colors.grey.shade900,
+                  color: widget.eventStatus
+                      ? Colors.redAccent
+                      : Colors.grey.shade900,
                 ),
               ),
               Positioned(
@@ -132,17 +138,98 @@ class _NeuButtonState extends State<NeuButton> {
                           onChanged: widget.onChanged)
                       : const Text('')),
               Positioned(
-                  right: 15.0,
-                  top: 10,
-                  child: widget.isDimmerOn
-                      ? Text(
-                          '${widget.dimmerValue.toInt()} %',
-                          style: TextStyle(
-                              color: widget.isButtonPressed
-                                  ? Colors.white
-                                  : Colors.grey[800]),
-                        )
-                      : const Text('')),
+                right: 15.0,
+                top: 10,
+                child: widget.isDimmerOn
+                    ? Text(
+                        '${widget.dimmerValue.toInt()} %',
+                        style: TextStyle(
+                            color: widget.isButtonPressed
+                                ? Colors.white
+                                : Colors.grey[800]),
+                      )
+                    : const Text(''),
+              ),
+              Positioned(
+                left: 20.0,
+                bottom: -1,
+                child: widget.isCCTOn
+                    ? ElevatedButton(
+                        onPressed: () {},
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 15,
+                              height: 15,
+                              decoration: BoxDecoration(
+                                  color: widget.isButtonPressed
+                                      ? const Color(0xffdde3e6)
+                                      : Colors.grey[800],
+                                  shape: BoxShape.circle),
+                            ),
+                            Container(
+                              width: 15,
+                              height: 15,
+                              decoration: BoxDecoration(
+                                  color: widget.isButtonPressed
+                                      ? const Color(0xfff1ebc8)
+                                      : Colors.grey[800],
+                                  shape: BoxShape.circle),
+                            ),
+                            Container(
+                              width: 15,
+                              height: 15,
+                              decoration: BoxDecoration(
+                                  color: widget.isButtonPressed
+                                      ? const Color.fromARGB(255, 250, 208, 118)
+                                      : Colors.grey[800],
+                                  shape: BoxShape.circle),
+                            ),
+                          ],
+                        ),
+                      )
+                    : const Text(''),
+              ),
+                      Positioned(
+                left: 20.0,
+                bottom: -1,
+                child: widget.isRGBOn
+                    ? ElevatedButton(
+                        onPressed: () {},
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 15,
+                              height: 15,
+                              decoration: BoxDecoration(
+                                  color: widget.isButtonPressed
+                                      ? Colors.redAccent
+                                      : Colors.grey[800],
+                                  shape: BoxShape.circle),
+                            ),
+                            Container(
+                              width: 15,
+                              height: 15,
+                              decoration: BoxDecoration(
+                                  color: widget.isButtonPressed
+                                      ? Colors.greenAccent
+                                      : Colors.grey[800],
+                                  shape: BoxShape.circle),
+                            ),
+                            Container(
+                              width: 15,
+                              height: 15,
+                              decoration: BoxDecoration(
+                                  color: widget.isButtonPressed
+                                      ?  Colors.blueAccent
+                                      : Colors.grey[800],
+                                  shape: BoxShape.circle),
+                            ),
+                          ],
+                        ),
+                      )
+                    : const Text(''),
+              ),
             ],
           ),
         ),

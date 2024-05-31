@@ -20,7 +20,9 @@ class AddDFunc extends StatefulWidget {
 }
 
 class _AddDFuncState extends State<AddDFunc> {
+  bool isRGBOn = false;
   bool isDimmerIsOn = false;
+  bool isCCTOn = false;
   int selectedItemIndex = 0;
 
   List<String> items = [
@@ -34,8 +36,9 @@ class _AddDFuncState extends State<AddDFunc> {
     'Dimmer1',
     'Dimmer2',
     'Dimmer3',
-    'RGB1',
-    'RGB2'
+    'CCT1',
+    'CCT2',
+    'RGB'
   ];
 
   TextEditingController nome = TextEditingController();
@@ -108,34 +111,59 @@ class _AddDFuncState extends State<AddDFunc> {
                   const Spacer(),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
-                    child: SizedBox(
-                      width: 150.0,
-                      child: CupertinoPicker(
-                        itemExtent: 40.0,
-                        onSelectedItemChanged: (int index) {
-                          setState(() {
-                            selectedItemIndex = index;
-                            saida = items[index];
-                            if ((items[index] == "Dimmer1") |
-                                (items[index] == "Dimmer2") |
-                                (items[index] == "Dimmer3")) {
-                              isDimmerIsOn = true;
-                            } else {
-                               isDimmerIsOn = false;
-
-                            }
-                          });
-                        },
-                        children:
-                            List<Widget>.generate(items.length, (int index) {
-                          return Center(
-                            child: Text(
-                              items[index],
+                    child: widget.editable
+                        ? SizedBox(
+                            width: 150,
+                            child: CupertinoPicker(
+                              itemExtent: 40.0,
+                              onSelectedItemChanged: (int index) {
+                                setState(() {
+                                  selectedItemIndex = index;
+                                  saida = items[index];
+                                  if ((items[index] == "Dimmer1") |
+                                      (items[index] == "Dimmer2") |
+                                      (items[index] == "Dimmer3")) {
+                                    isDimmerIsOn = true;
+                                  } else {
+                                    isDimmerIsOn = false;
+                                  }
+                                  if ((items[index] == 'CCT1') |
+                                      (items[index] == 'CCT2')) {
+                                    isCCTOn = true;
+                                  } else {
+                                    isCCTOn = false;
+                                  }
+                                  if ((items[index] == 'RGB')) {
+                                    isRGBOn = true;
+                                  } else {
+                                    isRGBOn = false;
+                                  }
+                                });
+                              },
+                              children: List<Widget>.generate(items.length,
+                                  (int index) {
+                                return Center(
+                                  child: Text(
+                                    items[index],
+                                  ),
+                                );
+                              }),
                             ),
-                          );
-                        }),
-                      ),
-                    ),
+                          )
+                        : Container(
+                            width: 150,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              color: Colors.grey.withOpacity(0.3),
+                            ),
+                            child: Center(
+                              child: Text(
+                                widget.saida,
+                                style: const TextStyle(fontSize: 25.0),
+                              ),
+                            ),
+                          ),
                   ),
                 ],
               ),
@@ -148,6 +176,8 @@ class _AddDFuncState extends State<AddDFunc> {
                             'nome': nome.text,
                             'saida': saida,
                             'isDimmerIsOn': isDimmerIsOn,
+                            'isCCTOn': isCCTOn,
+                            'isRGBOn' : isRGBOn,
                           });
                           Navigator.of(context).pop();
                         }
