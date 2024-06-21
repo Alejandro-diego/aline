@@ -1,6 +1,7 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore: must_be_immutable
@@ -20,6 +21,8 @@ class AddDFunc extends StatefulWidget {
 }
 
 class _AddDFuncState extends State<AddDFunc> {
+  DateTime time = DateTime(2024, 5, 10, 22, 35);
+
   bool isRGBOn = false;
   bool isDimmerIsOn = false;
   bool isCCTOn = false;
@@ -31,11 +34,11 @@ class _AddDFuncState extends State<AddDFunc> {
     '3',
     '4',
     '5',
+    '7',
     '6',
     '8',
     'Dimmer1',
     'Dimmer2',
-    'Dimmer3',
     'CCT1',
     'CCT2',
     'RGB'
@@ -121,8 +124,7 @@ class _AddDFuncState extends State<AddDFunc> {
                                   selectedItemIndex = index;
                                   saida = items[index];
                                   if ((items[index] == "Dimmer1") |
-                                      (items[index] == "Dimmer2") |
-                                      (items[index] == "Dimmer3")) {
+                                      (items[index] == "Dimmer2")) {
                                     isDimmerIsOn = true;
                                   } else {
                                     isDimmerIsOn = false;
@@ -168,6 +170,30 @@ class _AddDFuncState extends State<AddDFunc> {
                 ],
               ),
               const Spacer(),
+              CupertinoButton(
+                // Display a CupertinoDatePicker in time picker mode.
+                onPressed: () => _showDialog(
+                  CupertinoDatePicker(
+                    initialDateTime: time,
+                    mode: CupertinoDatePickerMode.time,
+                    use24hFormat: true,
+                    // This is called when the user changes the time.
+                    onDateTimeChanged: (DateTime newTime) {
+                      setState(() => time = newTime);
+                    },
+                  ),
+                ),
+                // In this example, the time value is formatted manually.
+                // You can use the intl package to format the value based on
+                // the user's locale settings.
+                child: Text(
+                  '${time.hour}:${time.minute}',
+                  style: const TextStyle(
+                    fontSize: 22.0,
+                  ),
+                ),
+              ),
+              const Spacer(),
               widget.editable
                   ? ElevatedButton(
                       onPressed: () {
@@ -177,7 +203,7 @@ class _AddDFuncState extends State<AddDFunc> {
                             'saida': saida,
                             'isDimmerIsOn': isDimmerIsOn,
                             'isCCTOn': isCCTOn,
-                            'isRGBOn' : isRGBOn,
+                            'isRGBOn': isRGBOn,
                           });
                           Navigator.of(context).pop();
                         }
@@ -242,5 +268,27 @@ class _AddDFuncState extends State<AddDFunc> {
     setState(() {
       disp = preference.getString('disp') ?? '';
     });
+  }
+
+  void _showDialog(Widget child) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => Container(
+        height: 216,
+        padding: const EdgeInsets.only(top: 6.0),
+        // The Bottom margin is provided to align the popup above the system
+        // navigation bar.
+        margin: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        // Provide a background color for the popup.
+        color: CupertinoColors.systemBackground.resolveFrom(context),
+        // Use a SafeArea widget to avoid system overlaps.
+        child: SafeArea(
+          top: false,
+          child: child,
+        ),
+      ),
+    );
   }
 }

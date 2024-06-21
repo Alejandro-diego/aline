@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                         (listFuntion) => NeuButton(
                           isRGBOn: listFuntion.isRGBOn,
                           isDimmerOn: listFuntion.isDimmerIsOn,
-                          onChanged: !listFuntion.status
+                          onChanged: !listFuntion.rele
                               ? null
                               : (value) {
                                   _db
@@ -118,12 +118,12 @@ class _HomePageState extends State<HomePage> {
                             _db
                                 .child('Dispo1080')
                                 .child('Saida${listFuntion.saida}')
-                                .update({'status': !listFuntion.status});
+                                .update({'rele': !listFuntion.rele});
                             HapticFeedback.heavyImpact();
                           },
                           isEnable: true,
                           eventStatus: true,
-                          isButtonPressed: listFuntion.status,
+                          isButtonPressed: listFuntion.rele,
                           title: listFuntion.nome,
                           cupertinoIcon: const IconData(63365,
                               fontFamily: CupertinoIcons.iconFont,

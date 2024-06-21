@@ -1,5 +1,5 @@
 class DataAd {
-  bool status;
+  bool rele;
   String nome;
   String saida;
   int dimmerValue;
@@ -8,7 +8,7 @@ class DataAd {
   bool isRGBOn;
 
   DataAd(
-      {required this.status,
+      {required this.rele,
       required this.isCCTOn,
       required this.isRGBOn,
       required this.isDimmerIsOn,
@@ -21,7 +21,7 @@ class DataAd {
         isRGBOn: data['isRGBOn'] ?? false,
         isCCTOn: data['isCCTOn'] ?? false,
         isDimmerIsOn: data['isDimmerIsOn'] ?? false,
-        status: data['status'] ?? false,
+        rele: data['rele'] ?? false,
         nome: data['nome'] ?? 'Saidas',
         saida: data["saida"] ?? '1',
         dimmerValue: data["dimmerValue"] ?? 10);
