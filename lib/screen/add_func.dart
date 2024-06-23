@@ -21,6 +21,8 @@ class AddDFunc extends StatefulWidget {
 }
 
 class _AddDFuncState extends State<AddDFunc> {
+  final List<DateTime> _horaDeInicio = [];
+
   DateTime time = DateTime(2024, 5, 10, 22, 35);
 
   bool isRGBOn = false;
@@ -71,6 +73,8 @@ class _AddDFuncState extends State<AddDFunc> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Func'),
@@ -170,6 +174,105 @@ class _AddDFuncState extends State<AddDFunc> {
                 ],
               ),
               const Spacer(),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Column(
+                      children: [
+                        Container(
+                          width: size.width * .403,
+                          height: 20,
+                          decoration: const BoxDecoration(color: Colors.orange),
+                          child: const Center(
+                            child: Text(
+                              'Ligar',
+                              style: TextStyle(color: Colors.black,fontWeight: FontWeight.w900),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: size.width * .4,
+                          height: 180,
+                          decoration: BoxDecoration(
+                            border:
+                                Border.all(width: 1.0, color: Colors.orange),
+                          ),
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                bottom: 1,
+                                right: 1,
+                                child: IconButton(
+                                  icon: const Icon(Icons.add),
+                                  onPressed: () {
+                                    _showDialog(
+                                      CupertinoDatePicker(
+                                        initialDateTime: time,
+                                        mode: CupertinoDatePickerMode.time,
+                                        use24hFormat: true,
+                                        // This is called when the user changes the time.
+                                        onDateTimeChanged: (DateTime newTime) {
+                                          setState(() => time = newTime);
+                                        },
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 1,
+                                left: 1,
+                                child: IconButton(
+                                  icon: const Icon(Icons.remove),
+                                  onPressed: () {},
+                                ),
+                              ),
+                              Positioned(
+                                left: 20,
+                                top: 10,
+                                child: Container(
+                                  width: 100,
+                                  height: 120,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.white)),
+                                  child: ListView.builder(
+                                      itemCount: _horaDeInicio.length,
+                                      itemBuilder: (context, index) {
+                                        return TextButton(
+                                          style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                                          onPressed: () {},
+                                          onLongPress: () {
+                                            setState(() {
+                                                _horaDeInicio
+                                                .remove(_horaDeInicio[index]);
+                                              
+                                            });
+                                          
+                                          },
+                                          child: Text( '${_horaDeInicio[index].hour}:${_horaDeInicio[index].minute}',),
+                                        );
+                                      }),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Container(
+                      width: size.width * .3,
+                      height: 200,
+                      decoration: BoxDecoration(
+                          border: Border.all(width: 1.0, color: Colors.orange)),
+                    ),
+                  )
+                ],
+              ),
               CupertinoButton(
                 // Display a CupertinoDatePicker in time picker mode.
                 onPressed: () => _showDialog(
@@ -179,7 +282,8 @@ class _AddDFuncState extends State<AddDFunc> {
                     use24hFormat: true,
                     // This is called when the user changes the time.
                     onDateTimeChanged: (DateTime newTime) {
-                      setState(() => time = newTime);
+                     time = newTime;
+                     // _horaDeInicio.add(newTime);
                     },
                   ),
                 ),
@@ -273,20 +377,30 @@ class _AddDFuncState extends State<AddDFunc> {
   void _showDialog(Widget child) {
     showCupertinoModalPopup<void>(
       context: context,
-      builder: (BuildContext context) => Container(
-        height: 216,
-        padding: const EdgeInsets.only(top: 6.0),
-        // The Bottom margin is provided to align the popup above the system
-        // navigation bar.
-        margin: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        // Provide a background color for the popup.
-        color: CupertinoColors.systemBackground.resolveFrom(context),
-        // Use a SafeArea widget to avoid system overlaps.
-        child: SafeArea(
-          top: false,
-          child: child,
+      builder: (BuildContext context) => GestureDetector(
+        onTap: () {
+          setState(() {
+            _horaDeInicio.add(time);
+          });
+        
+
+          Navigator.of(context).pop();
+        },
+        child: Container(
+          height: 216,
+          padding: const EdgeInsets.only(top: 6.0),
+          // The Bottom margin is provided to align the popup above the system
+          // navigation bar.
+          margin: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          // Provide a background color for the popup.
+          color: CupertinoColors.systemBackground.resolveFrom(context),
+          // Use a SafeArea widget to avoid system overlaps.
+          child: SafeArea(
+            top: false,
+            child: child,
+          ),
         ),
       ),
     );
