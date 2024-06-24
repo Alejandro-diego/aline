@@ -15,12 +15,15 @@ class AddDFunc extends StatefulWidget {
   bool editable;
   String nome;
   String saida;
+  
 
   @override
   State<AddDFunc> createState() => _AddDFuncState();
 }
 
 class _AddDFuncState extends State<AddDFunc> {
+
+   bool programarHora = false;
   final List<DateTime> _horaDeInicio = [];
 
   DateTime time = DateTime(2024, 5, 10, 22, 35);
@@ -173,8 +176,23 @@ class _AddDFuncState extends State<AddDFunc> {
                   ),
                 ],
               ),
-              const Spacer(),
-              Row(
+           //   const Spacer(),
+           Divider(),
+           Padding(
+             padding: const EdgeInsets.all(8.0),
+             child: Row(children: [
+              Text('Programar de hora'),
+              Spacer(),
+              CupertinoSwitch(value: programarHora, onChanged: (v){
+                setState(() {
+                  programarHora = v;
+                  
+                });
+              })
+             ],),
+           ),
+           programarHora
+           ?   Row(
                 children: [
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -187,7 +205,9 @@ class _AddDFuncState extends State<AddDFunc> {
                           child: const Center(
                             child: Text(
                               'Ligar',
-                              style: TextStyle(color: Colors.black,fontWeight: FontWeight.w900),
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w900),
                             ),
                           ),
                         ),
@@ -220,14 +240,7 @@ class _AddDFuncState extends State<AddDFunc> {
                                   },
                                 ),
                               ),
-                              Positioned(
-                                bottom: 1,
-                                left: 1,
-                                child: IconButton(
-                                  icon: const Icon(Icons.remove),
-                                  onPressed: () {},
-                                ),
-                              ),
+                            
                               Positioned(
                                 left: 20,
                                 top: 10,
@@ -235,22 +248,25 @@ class _AddDFuncState extends State<AddDFunc> {
                                   width: 100,
                                   height: 120,
                                   decoration: BoxDecoration(
-                                      border: Border.all(color: Colors.white)),
+                                    border: Border.all(color: const Color.fromARGB(255, 69, 67, 67)),
+                                  ),
                                   child: ListView.builder(
                                       itemCount: _horaDeInicio.length,
                                       itemBuilder: (context, index) {
                                         return TextButton(
-                                          style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                                          style: TextButton.styleFrom(
+                                              padding: EdgeInsets.zero),
                                           onPressed: () {},
                                           onLongPress: () {
                                             setState(() {
-                                                _horaDeInicio
-                                                .remove(_horaDeInicio[index]);
-                                              
-                                            });
-                                          
+                                              _horaDeInicio
+                                                  .remove(_horaDeInicio[index]);
+                                            },);
                                           },
-                                          child: Text( '${_horaDeInicio[index].hour}:${_horaDeInicio[index].minute}',),
+                                          child: Text(
+                                            '${_horaDeInicio[index].hour}:${_horaDeInicio[index].minute}',
+                                            style: const TextStyle(fontSize: 22.0,fontWeight: FontWeight.w900),
+                                          ),
                                         );
                                       }),
                                 ),
@@ -272,31 +288,11 @@ class _AddDFuncState extends State<AddDFunc> {
                     ),
                   )
                 ],
-              ),
-              CupertinoButton(
-                // Display a CupertinoDatePicker in time picker mode.
-                onPressed: () => _showDialog(
-                  CupertinoDatePicker(
-                    initialDateTime: time,
-                    mode: CupertinoDatePickerMode.time,
-                    use24hFormat: true,
-                    // This is called when the user changes the time.
-                    onDateTimeChanged: (DateTime newTime) {
-                     time = newTime;
-                     // _horaDeInicio.add(newTime);
-                    },
-                  ),
-                ),
-                // In this example, the time value is formatted manually.
-                // You can use the intl package to format the value based on
-                // the user's locale settings.
-                child: Text(
-                  '${time.hour}:${time.minute}',
-                  style: const TextStyle(
-                    fontSize: 22.0,
-                  ),
-                ),
-              ),
+              )
+
+              : const Text(''),
+     ///////
+                 
               const Spacer(),
               widget.editable
                   ? ElevatedButton(
@@ -382,7 +378,6 @@ class _AddDFuncState extends State<AddDFunc> {
           setState(() {
             _horaDeInicio.add(time);
           });
-        
 
           Navigator.of(context).pop();
         },
