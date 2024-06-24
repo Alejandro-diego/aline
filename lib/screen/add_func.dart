@@ -1,3 +1,4 @@
+import 'package:alines/widget/day_button.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -15,16 +16,16 @@ class AddDFunc extends StatefulWidget {
   bool editable;
   String nome;
   String saida;
-  
 
   @override
   State<AddDFunc> createState() => _AddDFuncState();
 }
 
 class _AddDFuncState extends State<AddDFunc> {
-
-   bool programarHora = false;
+  bool programarHora = false;
   final List<DateTime> _horaDeInicio = [];
+  final List<String> dias = ["D", "S", "T", "Q", "Q", "S", "S"];
+  late Map<int, String> diasMap = dias.asMap();
 
   DateTime time = DateTime(2024, 5, 10, 22, 35);
 
@@ -55,6 +56,7 @@ class _AddDFuncState extends State<AddDFunc> {
   final _formKey = GlobalKey<FormState>();
   late String saida = '1';
   late String disp = "1000";
+  late int numeroDeDia = 3;
 
   @override
   void dispose() {
@@ -176,123 +178,138 @@ class _AddDFuncState extends State<AddDFunc> {
                   ),
                 ],
               ),
-           //   const Spacer(),
-           Divider(),
-           Padding(
-             padding: const EdgeInsets.all(8.0),
-             child: Row(children: [
-              Text('Programar de hora'),
-              Spacer(),
-              CupertinoSwitch(value: programarHora, onChanged: (v){
-                setState(() {
-                  programarHora = v;
-                  
-                });
-              })
-             ],),
-           ),
-           programarHora
-           ?   Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Column(
+              //   const Spacer(),
+              const Divider(),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    const Text(
+                      'Programar de hora',
+                      style: TextStyle(fontWeight: FontWeight.w900),
+                    ),
+                    const Spacer(),
+                    CupertinoSwitch(
+                        value: programarHora,
+                        onChanged: (v) {
+                          setState(() {
+                            programarHora = v;
+                          });
+                        })
+                  ],
+                ),
+              ),
+              programarHora
+                  ? Row(
                       children: [
-                        Container(
-                          width: size.width * .403,
-                          height: 20,
-                          decoration: const BoxDecoration(color: Colors.orange),
-                          child: const Center(
-                            child: Text(
-                              'Ligar',
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w900),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          width: size.width * .4,
-                          height: 180,
-                          decoration: BoxDecoration(
-                            border:
-                                Border.all(width: 1.0, color: Colors.orange),
-                          ),
-                          child: Stack(
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Column(
                             children: [
-                              Positioned(
-                                bottom: 1,
-                                right: 1,
-                                child: IconButton(
-                                  icon: const Icon(Icons.add),
-                                  onPressed: () {
-                                    _showDialog(
-                                      CupertinoDatePicker(
-                                        initialDateTime: time,
-                                        mode: CupertinoDatePickerMode.time,
-                                        use24hFormat: true,
-                                        // This is called when the user changes the time.
-                                        onDateTimeChanged: (DateTime newTime) {
-                                          setState(() => time = newTime);
-                                        },
-                                      ),
-                                    );
-                                  },
+                              Container(
+                                width: size.width * .403,
+                                height: 20,
+                                decoration:
+                                    const BoxDecoration(color: Colors.orange),
+                                child: const Center(
+                                  child: Text(
+                                    'Ligar',
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w900),
+                                  ),
                                 ),
                               ),
-                            
-                              Positioned(
-                                left: 20,
-                                top: 10,
-                                child: Container(
-                                  width: 100,
-                                  height: 120,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: const Color.fromARGB(255, 69, 67, 67)),
-                                  ),
-                                  child: ListView.builder(
-                                      itemCount: _horaDeInicio.length,
-                                      itemBuilder: (context, index) {
-                                        return TextButton(
-                                          style: TextButton.styleFrom(
-                                              padding: EdgeInsets.zero),
-                                          onPressed: () {},
-                                          onLongPress: () {
-                                            setState(() {
-                                              _horaDeInicio
-                                                  .remove(_horaDeInicio[index]);
-                                            },);
-                                          },
-                                          child: Text(
-                                            '${_horaDeInicio[index].hour}:${_horaDeInicio[index].minute}',
-                                            style: const TextStyle(fontSize: 22.0,fontWeight: FontWeight.w900),
-                                          ),
-                                        );
-                                      }),
+                              Container(
+                                width: size.width * .4,
+                                height: 180,
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                      width: 1.0, color: Colors.orange),
+                                ),
+                                child: Stack(
+                                  children: [
+                                    Positioned(
+                                      bottom: -1,
+                                      right: -1,
+                                      child: IconButton(
+                                        icon: const Icon(Icons.add),
+                                        onPressed: () {
+                                          _showDialog(
+                                            CupertinoDatePicker(
+                                              initialDateTime: time,
+                                              mode:
+                                                  CupertinoDatePickerMode.time,
+                                              use24hFormat: true,
+                                              // This is called when the user changes the time.
+                                              onDateTimeChanged:
+                                                  (DateTime newTime) {
+                                                setState(() => time = newTime);
+                                              },
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    Positioned(
+                                      left: 20,
+                                      top: 10,
+                                      child: Container(
+                                        width: 100,
+                                        height: 120,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: const Color.fromARGB(
+                                                  255, 69, 67, 67)),
+                                        ),
+                                        child: ListView.builder(
+                                            itemCount: _horaDeInicio.length,
+                                            itemBuilder: (context, index) {
+                                              return TextButton(
+                                                style: TextButton.styleFrom(
+                                                    padding: EdgeInsets.zero),
+                                                onPressed: () {},
+                                                onLongPress: () {
+                                                  setState(
+                                                    () {
+                                                      _horaDeInicio.remove(
+                                                          _horaDeInicio[index]);
+                                                    },
+                                                  );
+                                                },
+                                                child: Text(
+                                                  '${_horaDeInicio[index].hour}:${_horaDeInicio[index].minute}',
+                                                  style: const TextStyle(
+                                                      fontSize: 22.0,
+                                                      fontWeight:
+                                                          FontWeight.w900),
+                                                ),
+                                              );
+                                            }),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
                         ),
+                        const Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Container(
+                            width: size.width * .3,
+                            height: 200,
+                            decoration: BoxDecoration(
+                                border: Border.all(
+                                    width: 1.0, color: Colors.orange)),
+                          ),
+                        )
                       ],
-                    ),
-                  ),
-                  const Spacer(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Container(
-                      width: size.width * .3,
-                      height: 200,
-                      decoration: BoxDecoration(
-                          border: Border.all(width: 1.0, color: Colors.orange)),
-                    ),
-                  )
-                ],
-              )
+                    )
+                  : const Text(''),
+              ///////
 
-              : const Text(''),
-     ///////
-                 
               const Spacer(),
               widget.editable
                   ? ElevatedButton(
@@ -381,21 +398,53 @@ class _AddDFuncState extends State<AddDFunc> {
 
           Navigator.of(context).pop();
         },
-        child: Container(
-          height: 216,
-          padding: const EdgeInsets.only(top: 6.0),
-          // The Bottom margin is provided to align the popup above the system
-          // navigation bar.
-          margin: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          // Provide a background color for the popup.
-          color: CupertinoColors.systemBackground.resolveFrom(context),
-          // Use a SafeArea widget to avoid system overlaps.
-          child: SafeArea(
-            top: false,
-            child: child,
-          ),
+        child: Column(
+          children: [
+            const Spacer(),
+            Row(
+              children: [
+                Container(
+                  height: 200,
+                  width: MediaQuery.of(context).size.width * .5,
+                  decoration: BoxDecoration(
+                    color:
+                        CupertinoColors.systemBackground.resolveFrom(context),
+                  ),
+                  padding: const EdgeInsets.only(top: 6.0),
+                  margin: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom,
+                  ),
+                  child: SafeArea(
+                    top: false,
+                    child: child,
+                  ),
+                ),
+                Container(
+                  height: 200,
+                  width: MediaQuery.of(context).size.width * .5,
+                  decoration: BoxDecoration(
+                    color:
+                        CupertinoColors.systemBackground.resolveFrom(context),
+                  ),
+                  child: SafeArea(
+                    top: false,
+                    child: CupertinoPicker(
+                        itemExtent: 64,
+                        onSelectedItemChanged: (int value) {},
+                        children: diasMap
+                            .map(
+                              (i, dia) => MapEntry(i, DayButton(
+                                isButtonPress: true,
+                                dia: dia,
+                                onClicked: () {},
+                              ),)
+                            )
+                            .values.toList()),
+                  ),
+                )
+              ],
+            ),
+          ],
         ),
       ),
     );
