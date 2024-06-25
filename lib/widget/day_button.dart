@@ -28,7 +28,7 @@ class _DayButtonState extends State<DayButton> {
           height: 35,
           width: 35,
           decoration: BoxDecoration(
-            color: widget.isButtonPress ? Colors.blueGrey : Colors.transparent,
+            color: widget.isButtonPress ? Colors.cyan : Colors.transparent,
             border: Border.all(
                 color: widget.isButtonPress
                     ? const Color.fromARGB(255, 49, 45, 45)

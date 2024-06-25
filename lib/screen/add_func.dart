@@ -2,6 +2,7 @@ import 'package:alines/widget/day_button.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -25,6 +26,15 @@ class _AddDFuncState extends State<AddDFunc> {
   bool programarHora = false;
   final List<DateTime> _horaDeInicio = [];
   final List<String> dias = ["D", "S", "T", "Q", "Q", "S", "S"];
+  final List<bool> diasAcitvos = [
+    false,
+    false,
+    true,
+    false,
+    false,
+    false,
+    false
+  ];
   late Map<int, String> diasMap = dias.asMap();
 
   DateTime time = DateTime(2024, 5, 10, 22, 35);
@@ -93,7 +103,7 @@ class _AddDFuncState extends State<AddDFunc> {
               TextFormField(
                 keyboardType: TextInputType.name,
                 controller: nome,
-                cursorColor: Colors.amberAccent,
+                cursorColor: Colors.cyan,
                 // style: const TextStyle(fontSize: 20),
                 decoration: const InputDecoration(
                   labelText: 'Nome',
@@ -107,7 +117,7 @@ class _AddDFuncState extends State<AddDFunc> {
                     ),
                   ),
                   focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(width: 2, color: Colors.amberAccent),
+                    borderSide: BorderSide(width: 2, color: Colors.cyan),
                   ),
                 ),
                 validator: (value) {
@@ -190,6 +200,7 @@ class _AddDFuncState extends State<AddDFunc> {
                     ),
                     const Spacer(),
                     CupertinoSwitch(
+                      activeColor: Colors.cyan,
                         value: programarHora,
                         onChanged: (v) {
                           setState(() {
@@ -210,7 +221,7 @@ class _AddDFuncState extends State<AddDFunc> {
                                 width: size.width * .403,
                                 height: 20,
                                 decoration:
-                                    const BoxDecoration(color: Colors.orange),
+                                    const BoxDecoration(color: Colors.cyan),
                                 child: const Center(
                                   child: Text(
                                     'Ligar',
@@ -225,7 +236,7 @@ class _AddDFuncState extends State<AddDFunc> {
                                 height: 180,
                                 decoration: BoxDecoration(
                                   border: Border.all(
-                                      width: 1.0, color: Colors.orange),
+                                      width: 1.0, color: Colors.cyan),
                                 ),
                                 child: Stack(
                                   children: [
@@ -233,7 +244,8 @@ class _AddDFuncState extends State<AddDFunc> {
                                       bottom: -1,
                                       right: -1,
                                       child: IconButton(
-                                        icon: const Icon(Icons.add),
+                                        icon: const Icon(
+                                            Icons.access_time_filled_outlined),
                                         onPressed: () {
                                           _showDialog(
                                             CupertinoDatePicker(
@@ -302,7 +314,7 @@ class _AddDFuncState extends State<AddDFunc> {
                             height: 200,
                             decoration: BoxDecoration(
                                 border: Border.all(
-                                    width: 1.0, color: Colors.orange)),
+                                    width: 1.0, color: Colors.cyan)),
                           ),
                         )
                       ],
@@ -390,17 +402,37 @@ class _AddDFuncState extends State<AddDFunc> {
   void _showDialog(Widget child) {
     showCupertinoModalPopup<void>(
       context: context,
-      builder: (BuildContext context) => GestureDetector(
-        onTap: () {
-          setState(() {
-            _horaDeInicio.add(time);
-          });
-
-          Navigator.of(context).pop();
-        },
-        child: Column(
+      // _horaDeInicio.add(time);
+      builder: (BuildContext context) =>
+          StatefulBuilder(builder: (context, setState) {
+        return Column(
           children: [
             const Spacer(),
+            Container(
+              height: 25,
+              width: MediaQuery.of(context).size.width,
+              decoration: BoxDecoration(
+                color: CupertinoColors.systemBackground.resolveFrom(context),
+                
+              ),
+              child:Row(
+                children: [
+                    Text(
+                      'Todos os Dias',
+                      style: TextStyle(fontSize: 15)
+                    ),
+              
+                 const Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal:10 ),
+                    child: CupertinoCheckbox(
+                      activeColor: Colors.cyan ,
+                      inactiveColor: Colors.cyan,
+                      value: true, onChanged: (value){}),
+                  ),
+                ],
+              )
+            ),
             Row(
               children: [
                 Container(
@@ -419,34 +451,64 @@ class _AddDFuncState extends State<AddDFunc> {
                     child: child,
                   ),
                 ),
-                Container(
-                  height: 200,
-                  width: MediaQuery.of(context).size.width * .5,
-                  decoration: BoxDecoration(
-                    color:
-                        CupertinoColors.systemBackground.resolveFrom(context),
-                  ),
-                  child: SafeArea(
-                    top: false,
-                    child: CupertinoPicker(
-                        itemExtent: 64,
-                        onSelectedItemChanged: (int value) {},
-                        children: diasMap
-                            .map(
-                              (i, dia) => MapEntry(i, DayButton(
-                                isButtonPress: true,
-                                dia: dia,
-                                onClicked: () {},
-                              ),)
-                            )
-                            .values.toList()),
-                  ),
+                Stack(
+                  children: [
+                    Container(
+                      height: 200,
+                      width: MediaQuery.of(context).size.width * .5,
+                      decoration: BoxDecoration(
+                        color: CupertinoColors.systemBackground
+                            .resolveFrom(context),
+                      ),
+                      child: SafeArea(
+                        top: false,
+                        child: CupertinoPicker(
+                            itemExtent: 64,
+                            onSelectedItemChanged: (int value) {},
+                            children: diasMap
+                                .map((i, dia) => MapEntry(
+                                      i,
+                                      DayButton(
+                                        isButtonPress: diasAcitvos[i],
+                                        dia: dia,
+                                        onClicked: () {
+                                          debugPrint('$i');
+                                          setState(() {
+                                            diasAcitvos[i] = !diasAcitvos[i];
+                                          });
+                                        },
+                                      ),
+                                    ))
+                                .values
+                                .toList()),
+                      ),
+                    ),
+                    Positioned(
+                      bottom: 1,
+                      right: 1,
+                      child: IconButton(
+                        onPressed: () {
+                          _refresh();
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(Icons.add),
+                      ),
+                    ),
+                  ],
                 )
               ],
             ),
           ],
-        ),
-      ),
+        );
+      }),
     );
+  }
+
+  void _refresh() {
+    _horaDeInicio.add(time);
+    setState(() {
+      debugPrint(_horaDeInicio.toString());
+      debugPrint('unix time : ${time.millisecondsSinceEpoch}');
+    });
   }
 }
