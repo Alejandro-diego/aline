@@ -2,7 +2,7 @@ import 'package:alines/widget/day_button.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -405,100 +405,107 @@ class _AddDFuncState extends State<AddDFunc> {
       // _horaDeInicio.add(time);
       builder: (BuildContext context) =>
           StatefulBuilder(builder: (context, setState) {
-        return Column(
-          children: [
-            const Spacer(),
-            Container(
-              height: 25,
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                color: CupertinoColors.systemBackground.resolveFrom(context),
-                
-              ),
-              child:Row(
-                children: [
-                    Text(
-                      'Todos os Dias',
-                      style: TextStyle(fontSize: 15)
-                    ),
-              
-                 const Spacer(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal:10 ),
-                    child: CupertinoCheckbox(
-                      activeColor: Colors.cyan ,
-                      inactiveColor: Colors.cyan,
-                      value: true, onChanged: (value){}),
-                  ),
-                ],
-              )
-            ),
-            Row(
-              children: [
-                Container(
-                  height: 200,
-                  width: MediaQuery.of(context).size.width * .5,
-                  decoration: BoxDecoration(
-                    color:
-                        CupertinoColors.systemBackground.resolveFrom(context),
-                  ),
-                  padding: const EdgeInsets.only(top: 6.0),
-                  margin: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom,
-                  ),
-                  child: SafeArea(
-                    top: false,
-                    child: child,
-                  ),
+        return CupertinoApp(
+          debugShowCheckedModeBanner: false,
+          theme:const  CupertinoThemeData(brightness: Brightness.dark),
+          home: Column(
+            children: [
+              const Spacer(),
+              Container(
+                height: 25,
+                width: MediaQuery.of(context).size.width,
+                decoration: BoxDecoration(
+                  color: CupertinoColors.systemBackground.resolveFrom(context),
+                  
                 ),
-                Stack(
+                child:Row(
                   children: [
-                    Container(
-                      height: 200,
-                      width: MediaQuery.of(context).size.width * .5,
-                      decoration: BoxDecoration(
-                        color: CupertinoColors.systemBackground
-                            .resolveFrom(context),
-                      ),
-                      child: SafeArea(
-                        top: false,
-                        child: CupertinoPicker(
-                            itemExtent: 64,
-                            onSelectedItemChanged: (int value) {},
-                            children: diasMap
-                                .map((i, dia) => MapEntry(
-                                      i,
-                                      DayButton(
-                                        isButtonPress: diasAcitvos[i],
-                                        dia: dia,
-                                        onClicked: () {
-                                          debugPrint('$i');
-                                          setState(() {
-                                            diasAcitvos[i] = !diasAcitvos[i];
-                                          });
-                                        },
-                                      ),
-                                    ))
-                                .values
-                                .toList()),
-                      ),
-                    ),
-                    Positioned(
-                      bottom: 1,
-                      right: 1,
-                      child: IconButton(
-                        onPressed: () {
-                          _refresh();
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(Icons.add),
-                      ),
+                     
+                         const Text(
+                          'Todos os Dias',
+                          style: TextStyle(fontWeight: FontWeight.w900),
+                          
+                        ),
+                    
+                
+                   const Spacer(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal:10 ),
+                      child: CupertinoCheckbox(
+                        activeColor: Colors.cyan ,
+                        inactiveColor: Colors.cyan,
+                        value: true, onChanged: (value){}),
                     ),
                   ],
                 )
-              ],
-            ),
-          ],
+              ),
+              Row(
+                children: [
+                  Container(
+                    height: 200,
+                    width: MediaQuery.of(context).size.width * .5,
+                    decoration: BoxDecoration(
+                      color:
+                          CupertinoColors.systemBackground.resolveFrom(context),
+                    ),
+                    padding: const EdgeInsets.only(top: 6.0),
+                    margin: EdgeInsets.only(
+                      bottom: MediaQuery.of(context).viewInsets.bottom,
+                    ),
+                    child: SafeArea(
+                      top: false,
+                      child: child,
+                    ),
+                  ),
+                  Stack(
+                    children: [
+                      Container(
+                        height: 200,
+                        width: MediaQuery.of(context).size.width * .5,
+                        decoration: BoxDecoration(
+                          color: CupertinoColors.systemBackground
+                              .resolveFrom(context),
+                        ),
+                        child: SafeArea(
+                          top: false,
+                          child: CupertinoPicker(
+                              itemExtent: 64,
+                              onSelectedItemChanged: (int value) {},
+                              children: diasMap
+                                  .map((i, dia) => MapEntry(
+                                        i,
+                                        DayButton(
+                                          isButtonPress: diasAcitvos[i],
+                                          dia: dia,
+                                          onClicked: () {
+                                            debugPrint('$i');
+                                            setState(() {
+                                              diasAcitvos[i] = !diasAcitvos[i];
+                                            });
+                                          },
+                                        ),
+                                      ))
+                                  .values
+                                  .toList()),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 1,
+                        right: 1,
+                        child: IconButton(
+                          onPressed: () {
+                            _refresh();
+                            Navigator.pop(context);
+                          },
+                          icon: const Icon(Icons.add),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ],
+          ),
         );
       }),
     );
