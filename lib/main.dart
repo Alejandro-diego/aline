@@ -35,6 +35,7 @@ class Miapp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Alines',
       theme: ThemeData(
+        //colorSchemeSeed: Colors.blue,
         brightness: Brightness.dark,
         primarySwatch: Colors.grey,
       ),

@@ -24,7 +24,7 @@ class _DayButtonState extends State<DayButton> {
         onTap: widget.onClicked,
         child: AnimatedContainer(
           margin: const EdgeInsets.fromLTRB(12, 0, 0, 5),
-          duration: const Duration(milliseconds: 100),
+          duration: const Duration(milliseconds: 500),
           height: 35,
           width: 35,
           decoration: BoxDecoration(
