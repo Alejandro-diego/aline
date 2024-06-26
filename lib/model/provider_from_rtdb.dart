@@ -14,11 +14,11 @@ class DataProvider extends ChangeNotifier {
   DataAd? get rtbd => _rtbd;
 
   late StreamSubscription<DatabaseEvent> _listFuntionsStream;
-  late StreamSubscription<DatabaseEvent> _streamSubscription;
+ // late StreamSubscription<DatabaseEvent> _streamSubscription;
 
   DataProvider() {
     _listenFuntions();
-    _escuchardatos();
+   // _escuchardatos();
   }
 
   void _listenFuntions() {
@@ -36,7 +36,7 @@ class DataProvider extends ChangeNotifier {
       notifyListeners();
     });
   }
-
+/*
   void _escuchardatos() {
     _streamSubscription =
         _db.child('Dispo1080').child('Saida1').onValue.listen((event) {
@@ -45,12 +45,12 @@ class DataProvider extends ChangeNotifier {
       _rtbd = DataAd.fromRTDB(data);
       notifyListeners();
     });
-  }
+  }*/
 
   @override
   void dispose() {
     _listFuntionsStream.cancel();
-    _streamSubscription.cancel();
+   // _streamSubscription.cancel();
     super.dispose();
   }
 }
