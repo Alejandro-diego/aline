@@ -1,7 +1,10 @@
+import 'package:alines/utils.dart';
 import 'package:alines/widget/day_button.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,11 +14,16 @@ class AddDFunc extends StatefulWidget {
       {super.key,
       required this.editable,
       required this.nome,
-      required this.saida});
+      required this.saida,
+      required this.programarHora,
+      required this.listaDeHoraInicio});
+
+  bool programarHora;
 
   bool editable;
   String nome;
   String saida;
+  String listaDeHoraInicio;
 
   @override
   State<AddDFunc> createState() => _AddDFuncState();
@@ -24,8 +32,9 @@ class AddDFunc extends StatefulWidget {
 class _AddDFuncState extends State<AddDFunc> {
   bool todosOsDias = false;
   bool containerFinal = false;
-  bool programarHora = false;
-  final List<DateTime> _horaDeInicio = [];
+  DateFormat format = DateFormat.Hm();
+
+  List<String> _horaDeInicio = [];
   final List<DateTime> _horaDeFinalizar = [];
   final List<String> dias = ["D", "S", "T", "Q", "Q", "S", "S"];
   List<bool> diasAcitvos = [false, false, false, false, false, false, false];
@@ -73,8 +82,15 @@ class _AddDFuncState extends State<AddDFunc> {
 
   @override
   void initState() {
+    initializeDateFormatting();
+    _horaDeInicio = (widget.listaDeHoraInicio
+            .replaceAll('[', '')
+            .replaceAll(']', '')
+            .replaceAll(' ', ''))
+        .split(',');
+
+    debugPrint(_horaDeInicio.toString());
     if (!widget.editable) {
-      debugPrint('colocar nombre');
       nome.text = widget.nome;
       saida = widget.saida;
     }
@@ -198,10 +214,10 @@ class _AddDFuncState extends State<AddDFunc> {
                     const Spacer(),
                     CupertinoSwitch(
                         activeColor: Colors.cyan,
-                        value: programarHora,
+                        value: widget.programarHora,
                         onChanged: (v) {
                           setState(() {
-                            programarHora = v;
+                            widget.programarHora = v;
                           });
                         })
                   ],
@@ -222,8 +238,9 @@ class _AddDFuncState extends State<AddDFunc> {
                           width: size.width * .403,
                           height: 20,
                           decoration: BoxDecoration(
-                              color:
-                                  programarHora ? Colors.cyan : Colors.black87),
+                              color: widget.programarHora
+                                  ? Colors.cyan
+                                  : Colors.black87),
                           child: const Center(
                             child: Text(
                               'Ligar',
@@ -241,11 +258,11 @@ class _AddDFuncState extends State<AddDFunc> {
                           },
                           duration: const Duration(milliseconds: 500),
                           width: size.width * .4,
-                          height: programarHora ? 180 : 0,
+                          height: widget.programarHora ? 180 : 0,
                           decoration: BoxDecoration(
                             border: Border.all(
                                 width: 1.0,
-                                color: programarHora
+                                color: widget.programarHora
                                     ? Colors.cyan
                                     : Colors.black87),
                           ),
@@ -301,7 +318,7 @@ class _AddDFuncState extends State<AddDFunc> {
                                             );
                                           },
                                           child: Text(
-                                            '${_horaDeInicio[index].hour}:${_horaDeInicio[index].minute}',
+                                            _horaDeInicio[index],
                                             style: const TextStyle(
                                                 fontSize: 22.0,
                                                 fontWeight: FontWeight.w900),
@@ -328,8 +345,9 @@ class _AddDFuncState extends State<AddDFunc> {
                           width: size.width * .403,
                           height: 20,
                           decoration: BoxDecoration(
-                              color:
-                                  programarHora ? Colors.cyan : Colors.black87),
+                              color: widget.programarHora
+                                  ? Colors.cyan
+                                  : Colors.black87),
                           child: const Center(
                             child: Text(
                               'Desligar',
@@ -347,11 +365,11 @@ class _AddDFuncState extends State<AddDFunc> {
                           },
                           duration: const Duration(milliseconds: 500),
                           width: size.width * .4,
-                          height: programarHora ? 180 : 0,
+                          height: widget.programarHora ? 180 : 0,
                           decoration: BoxDecoration(
                             border: Border.all(
                                 width: 1.0,
-                                color: programarHora
+                                color: widget.programarHora
                                     ? Colors.cyan
                                     : Colors.black87),
                           ),
@@ -454,6 +472,14 @@ class _AddDFuncState extends State<AddDFunc> {
                         ElevatedButton(
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
+                              if (_horaDeInicio.isEmpty &
+                                  _horaDeFinalizar.isEmpty) {
+                                debugPrint('listas vacias');
+                                widget.programarHora = false;
+                              }
+                              String resultlist = (_horaDeInicio.toString())
+                                  .replaceAll('[, ', '');
+
                               _db
                                   .child('Dispo$disp')
                                   .child("Saida$saida")
@@ -461,7 +487,10 @@ class _AddDFuncState extends State<AddDFunc> {
                                 'nome': nome.text,
                                 'saida': saida,
                                 'isDimmerIsOn': isDimmerIsOn,
+                                'programarHora': widget.programarHora,
+                                'listaDeHorasInicio': resultlist
                               });
+
                               Navigator.of(context).pop();
                             }
                           },
@@ -625,18 +654,11 @@ class _AddDFuncState extends State<AddDFunc> {
   }
 
   void _refreshInit() {
-    _horaDeInicio.add(timeInit);
-    
-    setState(() {
-      // debugPrint(_horaDeInicio.toString());
-      // debugPrint(' init unix time : ${timeInit.millisecondsSinceEpoch}');
+    _horaDeInicio.add(Utils.toTime(timeInit));
 
-     // debugPrint(timeInit.hour.toString());
-    });
+    setState(() {});
 
     for (int index = 0; index < 7; index++) {
-      //debugPrint('${diasAcitvos[index]}');
-      //  if (index == 1) {}
       switch (index) {
         case 0:
           if (diasAcitvos[index]) {
@@ -693,12 +715,8 @@ class _AddDFuncState extends State<AddDFunc> {
   }
 
   void _refreshEnd() {
-    // _horaDeInicio.add(timeInit);
     _horaDeFinalizar.add(timeEnd);
-    setState(() {
-      // debugPrint(_horaDeFinalizar.toString());
-      // debugPrint(' init unix time : ${timeEnd.millisecondsSinceEpoch}');
-    });
+    setState(() {});
   }
 
   void _listDias(bool value) {

@@ -109,6 +109,8 @@ class _HomePageState extends State<HomePage> {
                                   editable: false,
                                   nome: listFuntion.nome,
                                   saida: listFuntion.saida,
+                                  programarHora: listFuntion.programarHora,
+                                  listaDeHoraInicio: listFuntion.listaDeHorasInicio,
                                 ),
                               ),
                             );
@@ -122,7 +124,7 @@ class _HomePageState extends State<HomePage> {
                             HapticFeedback.heavyImpact();
                           },
                           isEnable: true,
-                          eventStatus: true,
+                          eventStatus: listFuntion.programarHora,
                           isButtonPressed: listFuntion.rele,
                           title: listFuntion.nome,
                           cupertinoIcon: const IconData(63365,
@@ -175,6 +177,7 @@ Route _addFunc() {
       editable: true,
       nome: '',
       saida: '1',
+      programarHora: false, listaDeHoraInicio: '',
     ),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       const begin = Offset(0.0, 1.0);

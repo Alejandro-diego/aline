@@ -6,9 +6,13 @@ class DataAd {
   bool isDimmerIsOn;
   bool isCCTOn;
   bool isRGBOn;
+  bool programarHora;
+  String listaDeHorasInicio;
 
   DataAd(
-      {required this.rele,
+      {required this.listaDeHorasInicio,
+      required this.rele,
+      required this.programarHora,
       required this.isCCTOn,
       required this.isRGBOn,
       required this.isDimmerIsOn,
@@ -18,6 +22,8 @@ class DataAd {
 
   factory DataAd.fromRTDB(Map<String, dynamic> data) {
     return DataAd(
+        listaDeHorasInicio: data['listaDeHorasInicio'] ?? '',
+        programarHora: data['programarHora'] ?? false,
         isRGBOn: data['isRGBOn'] ?? false,
         isCCTOn: data['isCCTOn'] ?? false,
         isDimmerIsOn: data['isDimmerIsOn'] ?? false,
